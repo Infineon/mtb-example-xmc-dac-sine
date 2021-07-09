@@ -2,11 +2,11 @@
 
 This code example demonstrates the usage of the DAC peripheral of the XMC™ MCU.
 
-Two of five available DAC configurations are used in this example. It generates an analog sine wave on the DAC0 output and a static analog voltage on the DAC1 output. The frequency and time duration of the sine waves are adjusted to play an audio out of the DAC0 output.
+This example uses two of the five available DAC configurations. It generates an analog sine wave at the DAC0 output and a static analog voltage at the DAC1 output. The frequency and duration of the sine waves are adjusted to play an audio at the DAC0 output.
 
 ## Requirements
 
-- [ModusToolbox® software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3
 - [SEGGER J-Link software](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack)
 - Programming Language: C
 - Associated Parts: All [XMC™ MCU](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/) parts
@@ -23,7 +23,7 @@ Two of five available DAC configurations are used in this example. It generates 
 
 This example uses the board's default configuration. See the kit user guide to ensure that the board is configured correctly.
 
-The DAC output pin can be onnected to an earphone/speaker to listen to the generated audio.
+This example also uses an earphone or speaker, which you can connect to the DAC output pin to listen to the generated audio.
 
 ## Software Setup
 
@@ -103,16 +103,23 @@ Various CLI tools include a `-h` option that prints help information to the term
 
    2. In the **Quick Panel**, scroll down, and click **\<Application Name> Program (JLink)**.
 
-3. Confirm that the kit generates an analog sine wave on the DAC0 output and a static analog value on the DAC1 output. Observe that the output frequency and duration of the sine wave vary with time.
+3. Confirm that the kit generates an analog sine wave on the DAC0 output and a static analog value on the DAC1 output. Observe the output frequency and duration of the sine wave varying with time.
 
-4. By connecting a speaker on DAC0 output listen to the audio being played out.
+4. Connect a speaker to the DAC0 output to listen to the audio. 
 
    **Note:** The DAC can directly drive a 5-kOhm/50-pF terminated load. For example, XMC47 Relax kit P14.8 (DAC0), P14.9 (DAC1).
-
 
 ## Debugging
 
 You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (JLink)** configuration in the **Quick Panel**. For more details, see the "Program and Debug" section in the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
+
+## Design and implementation
+
+This example shows the working of the DAC peripheral of the XMC MCU. Initially, the following arrays are defined: 'melody[ARRAY_SIZE]' and 'beats[ARRAY_SIZE]'. The 'melody[ARRAY_SIZE]' array defines new frequencies. Frequencies defined by R in this array are outside the audible range and act as pauses in the melody being played. R is of type "const" and is predefined in the code. The 'beats[ARRAY_SIZE]' array defines the number of function calls after which the frequency will be updated. This defines the duration and pause times in the melody being played.
+
+Then, two DAC channels, DAC0 and DAC1, are configured in the following structures: 'ch_config0' and 'ch_config0', and sine wave pattern is used in the pattern mode of DAC.
+
+Finally, the interrupt handler for 'Systick' periodically calls the 'DAC_Update()' function. The 'DAC_Update()' function updates the DAC frequency after each function call. In this function, each frequency value in 'melody[index]' denotes a musical note to be played. Value in 'beats[index]' determines the duration for which each note must be played.
 
 ## Related Resources
 
@@ -145,13 +152,14 @@ Document Title: *CE232580* - *XMC MCU: DAC Sine Wave*
 | Version | Description of Change |
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
+| 1.0.1   | Updated README        |
 ------
 
 All other trademarks or registered trademarks referenced herein are the property of their respective owners.
 
 ![banner](images/ifx_logo_rgb.jpg)
 
-© 2021 Infineon Technologies AG
+© 2020-2021 Infineon Technologies AG
 
 All Rights Reserved.
 
