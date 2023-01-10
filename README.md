@@ -4,6 +4,10 @@ This code example demonstrates the usage of the DAC peripheral of the XMC&trade;
 
 This example uses two of the five available DAC configurations. It generates an analog sine wave at the DAC0 output and a static analog voltage at the DAC1 output. The frequency and duration of the sine waves are adjusted to play an audio at the DAC0 output.
 
+[View this README on GitHub.](https://github.com/Infineon/mtb-example-xmc-dac-sine)
+
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzI1ODAiLCJTcGVjIE51bWJlciI6IjAwMi0zMjU4MCIsIkRvYyBUaXRsZSI6IlhNQyZ0cmFkZTsgTUNVOiBEQUMgc2luZSB3YXZlIiwicmlkIjoidnNycyIsIkRvYyB2ZXJzaW9uIjoiMi4xLjAiLCJEb2MgTGFuZ3VhZ2UiOiJFbmdsaXNoIiwiRG9jIERpdmlzaW9uIjoiTUNEIiwiRG9jIEJVIjoiSUNXIiwiRG9jIEZhbWlseSI6Ik4vQSJ9)
+
 ## Requirements
 
 - [ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) v3.0
@@ -20,6 +24,11 @@ This example uses two of the five available DAC configurations. It generates an 
 ## Supported kits (make variable 'TARGET')
 
 - [XMC4700 relax kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc47_relax_v1/) (`KIT_XMC47_RELAX_V1`) - Default value of `TARGET`
+- [XMC4200 Platform2Go kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc_plt2go_xmc4200/) (`TARGET_KIT_XMC_PLT2GO_XMC4200`)
+- [XMC4300 relax EtherCAT kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc43_relax_ecat_v1/) (`TARGET_KIT_XMC43_RELAX_ECAT_V1`)
+- [XMC4400 Platform2Go kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc_plt2go_xmc4400/) (`TARGET_KIT_XMC_PLT2GO_XMC4400`)
+- [XMC4500 relax kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc45_relax_v1/) (`TARGET_KIT_XMC45_RELAX_V1`)
+- [XMC4800 relax EtherCAT kit](https://www.infineon.com/cms/en/product/evaluation-boards/kit_xmc48_relax_ecat_v1/) (`TARGET_KIT_XMC48_RELAX_ECAT_V1`)
 
 ## Hardware setup
 
@@ -33,7 +42,7 @@ This example requires no additional software or tools.
 
 Create the project and open it using one of the following:
 
-<details open><summary><b>In Eclipse IDE for ModusToolbox&trade; software</b></summary>
+<details><summary><b>In Eclipse IDE for ModusToolbox&trade; software</b></summary>
 
 1. Click the **New Application** link in the **Quick Panel** (or, use **File** > **New** > **ModusToolbox&trade; Application**). This launches the [Project Creator](https://www.infineon.com/ModusToolboxProjectCreator) tool.
 
@@ -53,17 +62,17 @@ Create the project and open it using one of the following:
 
 6. Click **Create** to complete the application creation process.
 
-For more details, see the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/ide_{version}/docs/mtb_ide_user_guide.pdf*).
+For more details, see the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mt_ide_user_guide.pdf*).
 
 </details>
 
-<details open><summary><b>In command-line interface (CLI)</b></summary>
+<details><summary><b>In command-line interface (CLI)</b></summary>
 
 ModusToolbox&trade; software provides the Project Creator as both a GUI tool and the command line tool, "project-creator-cli". The CLI tool can be used to create applications from a CLI terminal or from within batch files or shell scripts. This tool is available in the *{ModusToolbox&trade; software install directory}/tools_{version}/project-creator/* directory.
 
 Use a CLI terminal to invoke the "project-creator-cli" tool. On Windows, use the command line "modus-shell" program provided in the ModusToolbox&trade; software installation instead of a standard Windows command-line application. This shell provides access to all ModusToolbox&trade; software tools. You can access it by typing `modus-shell` in the search box in the Windows menu. In Linux and macOS, you can use any terminal application.
 
-This tool has the following arguments:
+The "project-creator-cli" tool has the following arguments:
 
 Argument | Description | Required/optional
 ---------|-------------|-----------
@@ -77,22 +86,22 @@ Argument | Description | Required/optional
 The following example will clone the "[DAC Sine Wave](https://github.com/Infineon/mtb-example-xmc-dac-sine)" application with the desired name "FceCrc" configured for the *KIT_XMC47_RELAX_V1* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
-   project-creator-cli --board-id KIT_XMC47_RELAX_V1 --app-id mtb-example-xmc-dac-sine --user-app-name FceCrc --target-dir "C:/mtb_projects"
+   project-creator-cli --board-id KIT_XMC47_RELAX_V1 --app-id mtb-example-xmc-dac-sine --user-app-name DacSine --target-dir "C:/mtb_projects"
    ```
 
 **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
 
 </details>
 
-<details open><summary><b>In third-party IDEs</b></summary>
+<details><summary><b>In third-party IDEs</b></summary>
 
-**Note:** Only VS Code is supported.
+**Note:** Only VS code is supported.
 
 1. Follow the instructions from the **In command-line interface (CLI)** section to create the application, and import the libraries using the `make getlibs` command.
 
 2. Export the application to a supported IDE using the `make <ide>` command.
 
-   For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
+For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox&trade; software user guide](https://www.infineon.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
 
 3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
 
@@ -112,11 +121,11 @@ The following example will clone the "[DAC Sine Wave](https://github.com/Infineo
 
 4. Connect a speaker to the DAC0 output to listen to the audio. 
 
-   **Note:** The DAC can directly drive a 5-kOhm/50-pF terminated load. For XMC4000 family devices - P14.8 (DAC0), P14.9 (DAC1).
+   **Note:** The DAC can directly drive a 5-kOhm/50-pF terminated load. For XMC4000 MCU family devices - P14.8 (DAC0), P14.9 (DAC1).
 
 ## Debugging
 
-You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (JLink)** configuration in the **Quick Panel**. For more details, see the "Program and Debug" section in the [Eclipse IDE for ModusToolbox&trade; user guide](https://www.infineon.com/MTBEclipseIDEUserGuide).
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (JLink)** configuration in the **Quick Panel**. For more details, see the "Program and Debug" section in the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.infineon.com/MTBEclipseIDEUserGuide).
 
 ## Design and implementation
 
@@ -131,27 +140,28 @@ Finally, the interrupt handler for 'Systick' periodically calls the 'DAC_Update(
 Resources | Links
 --------------------|----------------------
 Code examples | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
-Device documentation | [XMC4000 family datasheets](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/32-bit-xmc4000-industrial-microcontroller-arm-cortex-m4/#document-group-myInfineon-49) <br> [XMC4000 family technical reference manuals](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/32-bit-xmc4000-industrial-microcontroller-arm-cortex-m4/#document-group-myInfineon-44)
-Development kits |[XMC&trade; eval boards](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/#boards)
-Libraries on GitHub | [mtb-pdl-cat3](https://github.com/Infineon/mtb-pdl-cat3) – XMC&trade; MCU peripheral library (XMCLib) and docs
+Device documentation | [XMC4000 MCU family datasheets](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/32-bit-xmc4000-industrial-microcontroller-arm-cortex-m4/#document-group-myInfineon-49) <br> [XMC4000 MCU family technical reference manuals](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/32-bit-xmc4000-industrial-microcontroller-arm-cortex-m4/#document-group-myInfineon-44)
+Development kits |[XMC&trade; MCU eval boards](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/#boards)
+Libraries on GitHub | [mtb-xmclib-cat3 ](https://github.com/Infineon/mtb-xmclib-cat3) – XMC&trade; MCU peripheral library (XMCLib) and docs
 Tools | [Eclipse IDE for ModusToolbox&trade; software](https://www.infineon.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth&reg; connectivity devices.
 
 ## Other resources
 
-Infineon provides a wealth of data at www.infineon.com to help you select the right device, and quickly and effectively integrate it into your design.
+Infineon provides a wealth of data at [www.infineon.com](https://www.infineon.com/) to help you select the right device, and quickly and effectively integrate it into your design.
 
-For XMC&trade; MCU devices, see [32-bit XMC&trade; industrial microcontroller based on Arm&reg; Cortex&reg;-M](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/).
+For XMC&trade; MCU devices, see [32-bit XMC&trade; Industrial microcontroller based on Arm&reg; Cortex&reg;-M](https://www.infineon.com/cms/en/product/microcontroller/32-bit-industrial-microcontroller-based-on-arm-cortex-m/).
 
 ## Document history
 
 Document title: *CE232580* - *XMC&trade; MCU: DAC sine wave*
 
- Version | Description of change
- ------- | ---------------------
- 1.0.0   | New code example
- 1.0.1   | Updated README
- 1.1.0   | Added support for new kits
- 2.0.0   | Updated to support ModusToolbox&trade; software v3.0; CE will not be backward compatible with previous versions of ModusToolbox&trade; software
+| Version | Description of change |
+| ------- | --------------------- |
+| 1.0.0   | New code example      |
+| 1.0.1   | Updated README        |
+| 1.1.0   | Added support for new kits |
+| 2.0.0   | Updated to support ModusToolbox&trade; software v3.0. This CE is not backward compatible with previous versions of ModusToolbox™ software. |
+| 2.1.0   | Added support for DAC personality |
 ------
 
 All other trademarks or registered trademarks referenced herein are the property of their respective owners.

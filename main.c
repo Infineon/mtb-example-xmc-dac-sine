@@ -12,7 +12,7 @@
 *
 ******************************************************************************
 *
-* Copyright (c) 2015-2021, Infineon Technologies AG
+* Copyright (c) 2015-2022, Infineon Technologies AG
 * All rights reserved.
 *
 * Boost Software License - Version 1.0 - August 17th, 2003
@@ -43,9 +43,7 @@
 
 #include "cybsp.h"
 #include "cy_utils.h"
-
-#include "xmc_dac.h"
-#include "xmc_scu.h"
+#include "cy_retarget_io.h"
 
 /*******************************************************************************
 * Defines
@@ -56,8 +54,16 @@
 #define TICKS_PER_SECOND    (100U)          /* Systick ticks per second */
 #define SINE_CHANNEL        (0U)            /*DAC channel for sine output*/
 #define STATIC_CHANNEL      (1U)            /*DAC channel for static output*/
-#define WAVE_FREQ           (500U)          /*Wave frequency in pattern mode*/
-#define STATIC_VALUE        (0x1FF)         /*Static channel input*/
+
+/* Define macro to enable/disable printing of debug messages */
+#define ENABLE_XMC_DEBUG_PRINT (0)
+
+/* Define macro to set the loop count before printing debug messages */
+#if ENABLE_XMC_DEBUG_PRINT
+static bool DAC_updated = false;
+static bool loop_entered = false;
+#endif
+
 /*******************************************************************************
 * Global Variables
 *******************************************************************************/
@@ -89,27 +95,6 @@ const uint16_t beats[ARRAY_SIZE] =
   5U,  15U, 10U, 30U,  8U, 15U,  5U, 35U,
   8U,  30U,  8U, 15U,  8U, 15U,  8U, 50U
 };
-
-/*DAC0 channel configuration*/
-XMC_DAC_CH_CONFIG_t const ch_config0 =
-{
-  .output_offset = 0U,                                   /* Offset value */
-  .data_type = XMC_DAC_CH_DATA_TYPE_SIGNED,          /* Input data type: signed */
-  .output_scale = XMC_DAC_CH_OUTPUT_SCALE_MUL_64,       /* Input data scaling. Multiplied by 64 */
-  .output_negation = XMC_DAC_CH_OUTPUT_NEGATION_DISABLED,  /* Negation output waveform disabled */
-};
-
-/*DAC1 channel configuration*/
-XMC_DAC_CH_CONFIG_t const ch_config1 =
-{
-  .output_offset = 0U,                                   /* Offset value */
-  .data_type = XMC_DAC_CH_DATA_TYPE_SIGNED,          /* Input data type: signed */
-  .output_scale = XMC_DAC_CH_OUTPUT_SCALE_NONE,         /* No input data scaling*/
-  .output_negation = XMC_DAC_CH_OUTPUT_NEGATION_DISABLED,  /* Negation output waveform disabled */
-};
-
-/* Sine wave pattern is used in pattern mode of the DAC */
-const uint8_t pattern[] = XMC_DAC_PATTERN_SINE;
 
 /*******************************************************************************
 * Function Prototypes
@@ -164,24 +149,26 @@ int main(void)
         CY_ASSERT(0);
     }
 
-    /* API to initial DAC Module*/
-    XMC_DAC_CH_Init(XMC_DAC0, SINE_CHANNEL, &ch_config0);
-    XMC_DAC_CH_Init(XMC_DAC0, STATIC_CHANNEL, &ch_config1);
+    cy_retarget_io_init(CYBSP_DEBUG_UART_HW);
 
-    /* API to start DAC in Pattern mode. When using a predefined pattern a type cast avoid warnings */
-    XMC_DAC_CH_StartPatternMode(XMC_DAC0, SINE_CHANNEL, pattern, XMC_DAC_CH_PATTERN_SIGN_OUTPUT_DISABLED, XMC_DAC_CH_TRIGGER_INTERNAL, WAVE_FREQ);
-
-    /* API to initial DAC in SingleValue mode */
-    XMC_DAC_CH_StartSingleValueMode(XMC_DAC0, STATIC_CHANNEL);
-
-    /* API to write a value into DAC Output */
-    XMC_DAC_CH_Write(XMC_DAC0, STATIC_CHANNEL, STATIC_VALUE);
+    #if ENABLE_XMC_DEBUG_PRINT
+    printf("Initialization done\r\n");
+    #endif
 
     /* System timer configuration */
     SysTick_Config(SystemCoreClock / TICKS_PER_SECOND);
     while (1)
     {
-
+        #if ENABLE_XMC_DEBUG_PRINT
+        if(DAC_updated)
+        {
+            if(!loop_entered)
+            {
+                printf("DAC Updated\r\n");
+                loop_entered = true;
+            }
+        }
+        #endif
     }
 }
 
@@ -230,11 +217,11 @@ void DacUpdate(void)
         {
             index = 0;
         }
-
         /* update frequency */
         XMC_DAC_CH_SetPatternFrequency(XMC_DAC0, SINE_CHANNEL, melody[index]);
-
+    #if ENABLE_XMC_DEBUG_PRINT
+    DAC_updated = true;
+    #endif
     }
-
 }
 /* [] END OF FILE */
